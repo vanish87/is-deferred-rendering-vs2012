@@ -50,9 +50,10 @@ namespace MocapGE
 			//set mesh's parameter
 			meshes_[i]->SetRenderParameters();
 			//set mesh's texture
-			if(textures_.size()>i)
-			{				
-				shader_object_->SetReource("mesh_diffuse",tex_srvs_[i], 1);
+			Material* mat = materials_[meshes_[i]->GetMaterialID()];
+			//if(mat->diffuse_tex != 0)
+			{
+				//shader_object_->SetReource("mesh_diffuse",tex_srvs_[0], 1);
 			}
 			//render
 			meshes_[i]->Render(pass_index);
@@ -113,7 +114,7 @@ namespace MocapGE
 			d3d_shader_object->SetShaderResourceVariable("diffuse_tex");
 			d3d_shader_object->SetShaderResourceVariable("depth_tex");
 			d3d_shader_object->SetShaderResourceVariable("normal_tex");
-			d3d_shader_object->SetShaderResourceVariable("position_tex");
+			//d3d_shader_object->SetShaderResourceVariable("position_tex");
 			d3d_shader_object->SetShaderResourceVariable("shadow_map_tex");
 
 			//SSDO
@@ -127,6 +128,7 @@ namespace MocapGE
 
 	Texture* D3DModel::LoadTexture( std::string file_name )
 	{
+		if(file_name.empty())return 0;
 		//only for load d3d Texture
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
@@ -150,6 +152,7 @@ namespace MocapGE
 
 	void D3DModel::LoadPomTexture( std::string file_name )
 	{
+		//TODO: write a add material fun to add pom texture
 		pom_enabled_ = true;
 		pom_texture_ = LoadTexture(file_name);
 		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ,BU_SHADER_RES);

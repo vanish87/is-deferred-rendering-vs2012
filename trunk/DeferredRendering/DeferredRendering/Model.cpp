@@ -296,7 +296,7 @@ namespace MocapGE
 		}
 		if(ai_scene_->HasMaterials())
 		{
-			ProcessMaterials(ai_scene_->mMaterials);
+			ProcessMaterials(*ai_scene_->mMaterials);
 		}
 
 
@@ -736,7 +736,7 @@ namespace MocapGE
 			VertexType* vb = new VertexType[v_size];
 			uint32_t* ib = new uint32_t[i_size];
 
-			for(size_t j = 0; j< mesh->mNumVertices; ++j)
+			for(size_t j = 0; j< v_size; ++j)
 			{
 				aiVector3D pos = mesh->mVertices[j];
 				aiVector3D normal = mesh->mNormals[j];
@@ -749,16 +749,26 @@ namespace MocapGE
 				vb[j].uv.x()        = tex.x;		 vb[j].uv.y() = tex.y;
 				vb[j].tangent.x()   = tangent.x;	 vb[j].tangent.y() = tangent.y;		vb[j].tangent.z() = tangent.z;
 				vb[j].bitangent.x() = bitangent.x;	 vb[j].bitangent.y() = bitangent.y; vb[j].bitangent.z() = bitangent.z;
-			}
 
-			for(size_t j =0; j< mesh->mNumFaces; ++j)
-			{
-				for(size_t k =0; k < mesh->mFaces[j].mNumIndices; ++k)
-				{
-					ib[j * 3 + k] = mesh->mFaces[j].mIndices[k];
+// 				std::cout<<vb[j].position.x()<<" "<<vb[j].position.y()<<" "<<vb[j].position.z()<<std::endl;
+// 				std::cout<<vb[j].normal.x()<<" "<<vb[j].normal.y()<<" "<<vb[j].normal.z()<<std::endl;
+// 				std::cout<<vb[j].uv.x()<<" "<<vb[j].uv.y()<<std::endl;
+// 				std::cout<<vb[j].tangent.x()<<" "<<vb[j].tangent.y()<<" "<<vb[j].tangent.z()<<std::endl;
+// 				std::cout<<vb[j].bitangent.x()<<" "<<vb[j].bitangent.y()<<" "<<vb[j].bitangent.z()<<std::endl<<std::endl;
+			/*	ib[j]=j;*/
+			}
+			int cout = 0;
+			int j=0;
+			for (unsigned int x = 0; x < mesh->mNumFaces; ++x){
+				for (unsigned int a = 0; a < mesh->mFaces[x].mNumIndices; ++a)
+				{			
+					 ib[j++]=mesh->mFaces[x].mIndices[a];
 				}
 			}
-
+			for(size_t j = 0; j< i_size; ++j)
+			{
+				PRINT(ib[j]);
+			}
 			//call MakeRenderLayout
 			RenderLayout* render_layout = Context::Instance().GetRenderFactory().MakeRenderLayout();
 			//call MakeRenderBuffer(Vertex)
@@ -819,13 +829,94 @@ namespace MocapGE
 		throw std::exception("The method or operation is not implemented.");
 	}
 
-	void Model::ProcessMaterials(aiMaterial** mMaterials )
+	void Model::ProcessMaterials(const aiMaterial* materials )
 	{
 		for(size_t i = 0;i < ai_scene_->mNumMaterials; ++i)
 		{
 			Material* mat = new Material();
-			
+			const aiMaterial* ai_mat = &materials[i];
 
+			aiColor4D color;
+			materials_.push_back(mat);
+			return;
+			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_DIFFUSE, color))
+			{
+				mat->diffuse.x() = color.r;
+				mat->diffuse.y() = color.g;
+				mat->diffuse.z() = color.b;
+				mat->diffuse.w() = color.a;
+			}
+			else
+			{
+				PRINT("no diffuse color");
+			}
+
+			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_SPECULAR, color))
+			{
+				mat->specular.x() = color.r;
+				mat->specular.y() = color.g;
+				mat->specular.z() = color.b;
+				mat->specular.w() = color.a;
+			}
+			else
+			{
+				PRINT("no spacular color");
+			}
+
+			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_AMBIENT, color))
+			{
+				mat->ambient.x() = color.r;
+				mat->ambient.y() = color.g;
+				mat->ambient.z() = color.b;
+				mat->ambient.w() = color.a;
+			}
+			else
+			{
+				PRINT("no ambient color");
+			}
+
+			if(AI_SUCCESS != ai_mat->Get(AI_MATKEY_SHININESS, mat->shininess))
+			{
+				PRINT("no shininess");
+			}
+			
+			aiString szPath;
+			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), szPath))
+			{
+				Texture *tex = LoadTexture(szPath.C_Str());
+				if(tex)
+				{
+					textures_.push_back(tex);
+					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
+					//index 0 reserved for null
+					//mat->diffuse_tex = textures_.size();
+				}
+			}
+			else
+			{
+				PRINT("no difusse texture");
+			}
+
+			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_TEXTURE_NORMALS(0), szPath))
+			{
+
+				Texture *tex = LoadTexture(szPath.C_Str());
+				tex = LoadTexture(szPath.C_Str());
+				if(tex)
+				{
+					textures_.push_back(tex);
+					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
+					//index 0 reserved for null
+					//mat->normalmap_tex = textures_.size();
+				}
+			}
+			else
+			{
+				PRINT("no normal texture");
+			}
+			
+			materials_.push_back(mat);
+			
 		}
 	}
 

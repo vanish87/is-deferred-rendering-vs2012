@@ -67,7 +67,7 @@ namespace MocapGE
 
 	Texture* D3DSkyDome::LoadTexture( std::string file_name )
 	{
-
+		if(file_name.empty())return 0;
 		//only for load d3d Texture
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	

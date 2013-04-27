@@ -10,13 +10,6 @@
 #include <vector>
 
 
-class StartMenu;
-class ResembleState;
-class GamingState;
-
-class Picking;
-class Cannon;
-
 class MyApp :
 	public MocapGE:: App
 {
@@ -34,11 +27,10 @@ public:
 	virtual void OnMouseUp( WPARAM mouse_para, int x, int y );
 
 private:
-
-	typedef std::vector<Cannon*> PartList;
-
 	MocapGE::PointLight* point_light_;
 	MocapGE::SpotLight* spot_light_;
+
+	MocapGE::SceneObject* ship_;
 
 	MocapGE::Timer* timer_;
 

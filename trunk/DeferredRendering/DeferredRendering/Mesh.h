@@ -15,7 +15,7 @@ namespace MocapGE
 		Mesh(void);
 		~Mesh(void);
 
-		Mesh(std::string name, RenderLayout* render_layout, float4x4 model_matrix, VertexType* vb, uint32_t* ib, unsigned char mat_id)
+		Mesh(std::string name, RenderLayout* render_layout, float4x4 model_matrix, VertexType* vb, uint32_t* ib, uint8_t mat_id = NULL)
 			:RenderElement(model_matrix), name_(name), render_layout_(render_layout),
 			material_id_(mat_id),
 			vb_(vb), ib_(ib)
@@ -33,13 +33,14 @@ namespace MocapGE
 
 		VertexType* GetVertex(){return vb_;};
 		uint32_t* GetIndex(){return ib_;};
+		uint8_t GetMaterialID();
 
 
 	protected:
 
 		std::string name_;
 		RenderLayout* render_layout_;
-		unsigned char material_id_;
+		uint8_t material_id_;
 
 		//stores vertex in cpu for obj management
 		VertexType* vb_;

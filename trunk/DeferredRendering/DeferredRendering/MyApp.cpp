@@ -31,8 +31,11 @@ void MyApp::InitObjects()
 	spot_light_->SetOuterAngle(Math::PI / 14);
 	spot_light_->AddToScene();
 
-	D3DModel model;
-	model.LoadFile("../Media/spacecraft_new.dae");
+	D3DModel *model = new D3DModel();
+	model->LoadFile("../Media/spacecraft_new.dae");
+	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	ship_ = new SceneObject(model);
+	ship_->AddToScene();
 
 	timer_ = new Timer();
 	timer_->Retart();
@@ -77,7 +80,7 @@ void MyApp::OnMouseUp( WPARAM mouse_para, int x, int y )
 int main()
 {
 	 _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	Context::Instance().LoadConfig("E:\\12Fall\\Independent Study\\IS-Deferred Rendering\\IS-Deferred Rendering\\Config.xml");
+	Context::Instance().LoadConfig("E:/13Spring/IS/DeferredRendering/DeferredRendering/Config.xml");
 	ContextConfig cfg = Context::Instance().GetConfigure();
 	Context::Instance().Configure(cfg);
 

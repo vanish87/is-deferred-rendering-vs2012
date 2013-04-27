@@ -98,6 +98,25 @@ namespace MocapGE
 		float4 diffuse;
 		float4 specular;
 		float shininess;
+
+		//texture id
+		float diffuse_tex;
+		float normalmap_tex;
+		float pom_tex;
+
+		Material()
+			:ambient(float4(0.1f,0.1f,0.1f,0.1f)),
+			 diffuse(float4(0.1f,0.1f,0.1f,0.1f)),
+			 specular(float4(0.1f,0.1f,0.1f,0.1f)),
+			 shininess(1.0f),
+
+			 diffuse_tex(0),
+			 normalmap_tex(0),
+			 pom_tex(0)
+		{
+		
+		}
+
 	};
 
 	//make sure the same order in fx file

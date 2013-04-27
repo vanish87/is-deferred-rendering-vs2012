@@ -254,7 +254,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	//float shadow_depth = shadow_map_tex.Sample(ShadowMapSampler, shadow_tex_cood).r;
 	//shadow_depth = zn * q / (q - shadow_depth);
 
-	
+	//
 	float4 pos_light = mul(world_pos, g_light_view_proj);
 	pos_light /= pos_light.w;
 	pos_light.x = pos_light.x / 2 + 0.5f;
