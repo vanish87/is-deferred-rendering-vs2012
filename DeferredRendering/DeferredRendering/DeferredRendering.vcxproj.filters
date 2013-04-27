@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="D3D11Plugin">
+      <UniqueIdentifier>{58c196b1-c7f1-4fdf-bea8-3220dda60264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11Plugin\Header Files">
+      <UniqueIdentifier>{abd8680e-5555-4122-9de5-84169b7d1d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11Plugin\Source Files">
+      <UniqueIdentifier>{b0f3bf58-9adc-4c0e-9228-c1f55118d7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FxFiles">
+      <UniqueIdentifier>{c14cac8d-e142-45d8-8d9c-1210c994d61d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AABBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRendering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StartMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DFrameBuffer.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DModel.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderBuffer.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderEngine.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderFactory.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderLayout.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderState.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderView.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DShaderobject.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DSkyDome.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DTexture.cpp">
+      <Filter>D3D11Plugin\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AABBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Configure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PreDec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StartMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeAndFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DFrameBuffer.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DModel.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DPreDec.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderBuffer.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderEngine.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderFactory.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderLayout.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderState.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DRenderView.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DShaderobject.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DSkyDome.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DTexture.h">
+      <Filter>D3D11Plugin\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\FxFiles\DeferredLighting.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\GaussianBlurXFilterPostProcess.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\GaussianBlurYFilterPostProcess.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\LinearizeDepthPostProcess.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\Rendering.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\SSDO.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
