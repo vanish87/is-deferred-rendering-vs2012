@@ -16,7 +16,11 @@ namespace MocapGE
 	{
 		std::ifstream fin(file_name, std::ios::binary);
 
-		if (!fin)PRINT("Cannot open Fxo File ");
+		if (!fin)
+		{
+			PRINT("Cannot open Fxo File ");
+			return;
+		}
 
 		fin.seekg(0, std::ios_base::end);
 		int size = (int)fin.tellg();

@@ -21,7 +21,8 @@ namespace MocapGE
 	void Context::LoadConfig( std::string const & cfg_file )
 	{
 		XMLParserPtr xml_parser_ptr_=boost::shared_ptr<XMLParser>(new XMLParser);
-		xml_parser_ptr_->LoadFile(cfg_file);
+		if(!xml_parser_ptr_->LoadFile(cfg_file))
+			PRINT("FAIL to load " + cfg_file);
 
 		XMLNodePtr configure=xml_parser_ptr_->GetRoot("configure");
 		XMLNodePtr context=configure->GetChild("context");

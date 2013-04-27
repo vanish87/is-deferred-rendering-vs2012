@@ -4,6 +4,10 @@ struct Material
 	float4 Diffuse;
 	float4 Specular; //it will be only float
 	float  Shininess;
+
+	float diffuse_tex_index;
+	float normalmap_tex_index;
+	float pom_tex_index;
 };
 
 struct Light

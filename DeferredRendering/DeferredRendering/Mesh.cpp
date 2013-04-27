@@ -38,5 +38,10 @@ namespace MocapGE
 		//throw std::exception("The method or operation is not implemented.");
 	}
 
+	uint8_t Mesh::GetMaterialID()
+	{
+		return material_id_;
+	}
+
 
 }

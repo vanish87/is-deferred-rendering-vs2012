@@ -394,9 +394,9 @@ namespace MocapGE
 				shadow_map_yblur_pp_->Apply();
 
 				ssdo_pp_->SetCamera(back_frame_camera);
-				ssdo_pp_->Apply();
-				occlusion_xblur_pp_->Apply();
- 				occlusion_yblur_pp_->Apply();
+				//ssdo_pp_->Apply();
+				//occlusion_xblur_pp_->Apply();
+ 				//occlusion_yblur_pp_->Apply();
 
 				//depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer_->GetDepthTexture(), AT_GPU_READ, BU_SHADER_RES); 			
 				shader_object->SetReource("depth_tex", depth_srv_, 1);

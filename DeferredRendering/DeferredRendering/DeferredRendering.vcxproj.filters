@@ -316,9 +316,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\FxFiles\DeferredLighting.fx">
-      <Filter>FxFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\FxFiles\GaussianBlurXFilterPostProcess.fx">
       <Filter>FxFiles</Filter>
     </FxCompile>
@@ -334,5 +331,13 @@
     <FxCompile Include="..\FxFiles\SSDO.fx">
       <Filter>FxFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\FxFiles\DeferredLighting.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Config.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
