@@ -34,6 +34,13 @@ private:
 
 	MocapGE::Timer* timer_;
 
+	bool first_person_;
+	MocapGE::float3 cam_pos_;
+	MocapGE::float3 cam_look_;
+
+	float pitch_angle_;
+	float speed_;
+
 
 };
 

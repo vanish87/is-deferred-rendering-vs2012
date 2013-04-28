@@ -61,9 +61,10 @@ namespace MocapGE
 		Math::RotationAxis(mat, left, angle);
 
 		up_ = Math::TransformNormal(up_, mat);
-		at_ = Math::Transform(at_, mat);
+		dir = Math::Transform(dir, mat);
+		dir = Math::Normalize(dir);
 
-		view_matrix_ = Math::LookAtLH(eye_, at_, up_);
+		view_matrix_ = Math::LookAtLH(eye_, dir, up_);
 	}
 
 	void Camera::Yaw( float angle )

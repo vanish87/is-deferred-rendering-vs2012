@@ -121,54 +121,54 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 {
 	GbufferPSOutput output;
 
-	int g_nMaxSamples = 100;
-	int g_nMinSamples = 12;
-	float fHeightMapScale = 0.08;
-	float fParallaxLimit = length((pin.vViewTS.xy) / pin.vViewTS.z);
-	fParallaxLimit *= fHeightMapScale;
-
-	float2 vOffset = normalize( float2(-pin.vViewTS.x, pin.vViewTS.y) );
-	vOffset = vOffset * fParallaxLimit;
-
-	int nNumSamples = (int) lerp( g_nMinSamples, g_nMaxSamples,dot(  pin.vViewTS,  pin.vNormalTS ));
-	float fStepSize = 1.0f / nNumSamples;
-
-	float2 dx, dy;
-	dx = ddx( pin.tex_cood );
-	dy = ddy( pin.tex_cood );
-
-	float2 vOffsetStep = fStepSize * vOffset;
-	float2 vCurrOffset = 0.0f;
-	float2 vLastOffset = 0.0f;
-	float2 vFinalOffset = 0.0f;
-
-	float4 vCurrSample;
-	float4  vLastSample;
-
-	float stepHeight = 1.0;
-	int nCurrSample = 0;
-
-	while( nCurrSample < nNumSamples )
-	{
-		vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood + vCurrOffset, dx, dy );
-
-		if ( vCurrSample.a > stepHeight )
-	   {
-		  float Ua = (vLastSample.a - (stepHeight+fStepSize))  / ( fStepSize + (vCurrSample.a - vLastSample.a));
-		  vFinalOffset = vLastOffset + Ua * vOffsetStep;
-
-		  vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood  + vFinalOffset, dx, dy );
-		  nCurrSample = nNumSamples + 1;
-	   }
-		else
-	   {
-		  nCurrSample++;
-		  stepHeight -= fStepSize;
-		  vLastOffset = vCurrOffset;
-		  vCurrOffset += vOffsetStep;
-		  vLastSample = vCurrSample;
-	   }
-	}
+// 	int g_nMaxSamples = 100;
+// 	int g_nMinSamples = 12;
+// 	float fHeightMapScale = 0.08;
+// 	float fParallaxLimit = length((pin.vViewTS.xy) / pin.vViewTS.z);
+// 	fParallaxLimit *= fHeightMapScale;
+// 
+// 	float2 vOffset = normalize( float2(-pin.vViewTS.x, pin.vViewTS.y) );
+// 	vOffset = vOffset * fParallaxLimit;
+// 
+// 	int nNumSamples = (int) lerp( g_nMinSamples, g_nMaxSamples,dot(  pin.vViewTS,  pin.vNormalTS ));
+// 	float fStepSize = 1.0f / nNumSamples;
+// 
+// 	float2 dx, dy;
+// 	dx = ddx( pin.tex_cood );
+// 	dy = ddy( pin.tex_cood );
+// 
+// 	float2 vOffsetStep = fStepSize * vOffset;
+// 	float2 vCurrOffset = 0.0f;
+// 	float2 vLastOffset = 0.0f;
+// 	float2 vFinalOffset = 0.0f;
+// 
+// 	float4 vCurrSample;
+// 	float4  vLastSample;
+// 
+// 	float stepHeight = 1.0;
+// 	int nCurrSample = 0;
+// 
+// 	while( nCurrSample < nNumSamples )
+// 	{
+// 		vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood + vCurrOffset, dx, dy );
+// 
+// 		if ( vCurrSample.a > stepHeight )
+// 	   {
+// 		  float Ua = (vLastSample.a - (stepHeight+fStepSize))  / ( fStepSize + (vCurrSample.a - vLastSample.a));
+// 		  vFinalOffset = vLastOffset + Ua * vOffsetStep;
+// 
+// 		  vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood  + vFinalOffset, dx, dy );
+// 		  nCurrSample = nNumSamples + 1;
+// 	   }
+// 		else
+// 	   {
+// 		  nCurrSample++;
+// 		  stepHeight -= fStepSize;
+// 		  vLastOffset = vCurrOffset;
+// 		  vCurrOffset += vOffsetStep;
+// 		  vLastSample = vCurrSample;
+// 	   }
+// 	}
 
 	
 	//normal map
@@ -189,7 +189,7 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 
 	output.Normal = float4(normalVS, gMaterial.Shininess);	
 	//combines Mat with Tex color
-	output.Diffuse  = float4(mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood  + vFinalOffset).rgb * gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
+	output.Diffuse  = float4(mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood ).rgb * gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
 	output.PositionWS = float4(pin.posWS,1.0f);
 
@@ -347,7 +347,7 @@ FinalVout FinalVS(in FinalVin vin)
 
 float4 FinalPS( in FinalVout pin): SV_Target
 {
-	if(1)//for debugging
+	if(0)//for debugging
 	{
 	int3 samplelndices = int3( pin.pos.xy, 0 );
 	float4 world_pos = lighting_tex.Load( samplelndices );

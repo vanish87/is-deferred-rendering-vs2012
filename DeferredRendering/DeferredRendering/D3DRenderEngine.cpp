@@ -192,7 +192,11 @@ namespace MocapGE
 		ID3D11InputLayout* input_layout;
 		result = d3d_device_->CreateInputLayout(input_layout_desc, vertex_layout.size(), pass_desc.pIAInputSignature, 
 			pass_desc.IAInputSignatureSize, &input_layout);
-		if(FAILED(result))PRINT("Cannot Create Input Layout");
+		if(FAILED(result))
+		{
+			result = d3d_device_->GetDeviceRemovedReason();
+			PRINT("Cannot Create Input Layout");
+		}
 		d3d_imm_context_->IASetInputLayout(input_layout);
 		input_layout->Release();
 		delete[] input_layout_desc;
@@ -235,7 +239,12 @@ namespace MocapGE
 
 	void D3DRenderEngine::SwapBuffers()
 	{
-		d3d_swap_chain->Present(0, 0);
+		HRESULT result = d3d_swap_chain->Present(0, 0);
+		if(FAILED(result))
+		{
+			result = d3d_device_->GetDeviceRemovedReason();
+			PRINT("d3d_swap_chain->Present Failed");
+		}
 	}
 
 	void D3DRenderEngine::OnResize()
