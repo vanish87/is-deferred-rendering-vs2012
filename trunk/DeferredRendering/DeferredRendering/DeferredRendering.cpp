@@ -181,7 +181,25 @@ namespace MocapGE
 		AddLightingBuffer(render_view);
 		AddLightingBuffer(shader_resource);
 
-		depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer_->GetDepthTexture(), AT_GPU_READ, BU_SHADER_RES); 		
+		linearize_depth_so_ = new D3DShaderobject();
+		linearize_depth_so_->LoadFxoFile("FxFiles/LinearizeDepthPostProcess.cso");
+		linearize_depth_so_->SetTechnique("PPTech");
+
+		linearize_depth_pp_ = new PostProcess();
+		linearize_depth_pp_->SetPPShader(linearize_depth_so_);
+
+		depth_tex_ = gbuffer_->GetDepthTexture();
+		linear_depth_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+
+		linearize_depth_pp_->SetInput(depth_tex_, 0);
+		linearize_depth_pp_->SetOutput(linear_depth_tex_, 0);
+
+		depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(linear_depth_tex_, AT_GPU_READ, BU_SHADER_RES); 
+
+		//back camera
+		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
+		back_frame_camera_= back_buffer_->GetFrameCamera();
 
 	}
 
@@ -283,15 +301,12 @@ namespace MocapGE
 		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
-		FrameBuffer* back_buffer = render_engine->CurrentFrameBuffer();
-		Camera* back_frame_camera = back_buffer->GetFrameCamera();
-		
 
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
 			//bind gbuffer
-			gbuffer_->SetFrameCamera(back_frame_camera);
+			gbuffer_->SetFrameCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(gbuffer_);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
@@ -305,27 +320,17 @@ namespace MocapGE
 				(*re)->EndRender();
 			}
 
-
+			linearize_depth_pp_->Apply();
 
 			//pass 1
 			//bind lighting buffer
-			lighting_buffer_->SetFrameCamera(back_frame_camera);
+			lighting_buffer_->SetFrameCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
 			LightStruct* light_buffer = new LightStruct[lights.size()];
-			/*RenderBuffer* lights_buffer = Context::Instance().GetRenderFactory().GetRenderEngine().GetLightsBuufer();
-			LightStruct* l = static_cast<LightStruct*>(lights_buffer->Map(AT_CPU_WRITE));
-			for (size_t i =0; i< lights.size(); i++)
-			{
-				l[i].color = lights[i]->GetColor();
-				l[i].position = static_cast<PointLight*>(lights[i])->GetPos();
-			}
-			lights_buffer->UnMap();*/
-			//set gbuffer as input textures
-			back_frame_camera = back_buffer->GetFrameCamera();
-			float4x4 view_mat = back_frame_camera->GetViewMatirx();
+			float4x4 view_mat = back_frame_camera_->GetViewMatirx();
 			float4x4 invtrans_view_mat = Math::InverTranspose(view_mat);
 			float4x4 shadow_trans_mat;
 			float4x4 light_view_proj;
@@ -372,6 +377,7 @@ namespace MocapGE
 					shadow_map_buffer_->SetFrameCamera(sm_camera);
 					render_engine->BindFrameBuffer(shadow_map_buffer_);
 					render_engine->SetNormalState();
+
 					Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 					std::vector<RenderElement*>::iterator re;
 					for(re = render_list.begin() ; re < render_list.end(); re++)
@@ -385,20 +391,21 @@ namespace MocapGE
 						(*re)->GetShaderObject()->SetTechnique("GbufferTech");
 					}
 
+					linearize_shadow_map_pp_->Apply();
+					shadow_map_xblur_pp_->Apply();
+					shadow_map_yblur_pp_->Apply();
 				}
 
 				
 				
-				linearize_shadow_map_pp_->Apply();
-				shadow_map_xblur_pp_->Apply();
-				shadow_map_yblur_pp_->Apply();
 
-				ssdo_pp_->SetCamera(back_frame_camera);
+				//ssdo_pp_->SetCamera(back_frame_camera_);
 				//ssdo_pp_->Apply();
 				//occlusion_xblur_pp_->Apply();
  				//occlusion_yblur_pp_->Apply();
 
-				//depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer_->GetDepthTexture(), AT_GPU_READ, BU_SHADER_RES); 			
+
+				//set gbuffer as input textures		
 				shader_object->SetReource("depth_tex", depth_srv_, 1);
 				shader_object->SetReource("normal_tex", gbuffer_srv_[0], 1);
 				shader_object->SetReource("shadow_map_tex", shadow_blur_srv_, 1);
@@ -412,14 +419,15 @@ namespace MocapGE
 				std::cout<<view_proj_mat[0][0]<<" "<<view_proj_mat[0][1]<<" "<<view_proj_mat[0][2]<<"\n";
 				std::cout<<view_proj_mat[1][0]<<" "<<view_proj_mat[1][1]<<" "<<view_proj_mat[1][2]<<"\n";
 				std::cout<<view_proj_mat[2][0]<<" "<<view_proj_mat[2][1]<<" "<<view_proj_mat[2][2]<<"\n\n";*/
-				lighting_buffer_->SetFrameCamera(back_frame_camera);
+				lighting_buffer_->SetFrameCamera(back_frame_camera_);
 				render_engine->BindFrameBuffer(lighting_buffer_);
+				//render_engine->RenderFrameBegin();
 				render_engine->SetDeferredRenderingState();
 				shader_object->SetMatrixVariable("g_shadow_transform", shadow_trans_mat);
 				shader_object->SetMatrixVariable("g_light_view_proj", view_proj_mat);
+
 				fullscreen_mesh_->SetShaderObject(shader_object);
 				fullscreen_mesh_->SetRenderParameters();
-				//quad->GetShaderObject()->Apply(1);
 				fullscreen_mesh_->Render(1);
 				fullscreen_mesh_->EndRender();
 			}
@@ -427,7 +435,7 @@ namespace MocapGE
 			delete[] light_buffer;
 
 			//pass 2
-			render_engine->BindFrameBuffer(back_buffer);
+			render_engine->BindFrameBuffer(back_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			shader_object->SetReource("lighting_tex", lighting_srv_, 1);
 			shader_object->SetReource("diffuse_tex", gbuffer_srv_[1], 1);

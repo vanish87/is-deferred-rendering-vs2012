@@ -53,11 +53,20 @@ namespace MocapGE
 		FrameBuffer* lighting_buffer_;
 		RenderBuffer* lighting_srv_;
 
+		//depth buffer
+		D3DShaderobject* linearize_depth_so_;
+		PostProcess* linearize_depth_pp_;
+		Texture* depth_tex_;
+		Texture* linear_depth_tex_;
+
 		//for shadowing
 		FrameBuffer* shadowing_buffer_;
 		RenderBuffer* shadowing_srv_;
 		Texture* shadowing_tex_;
 
+		//back camera and buffer
+		FrameBuffer* back_buffer_;
+		Camera* back_frame_camera_; 
 
 		Texture* shadow_blur_;
 

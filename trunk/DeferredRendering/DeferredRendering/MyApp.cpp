@@ -25,7 +25,7 @@ void MyApp::InitObjects()
 	//point_light_->AddToScene();
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(10, 10, 0));
+	spot_light_->SetPos(float3(50, 500, 0));
 	spot_light_->SetDir(float3(0,0,0)-spot_light_->GetPos());
 	spot_light_->SetInnerAngle(Math::PI / 24);
 	spot_light_->SetOuterAngle(Math::PI / 14);
@@ -37,15 +37,25 @@ void MyApp::InitObjects()
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
+	model = new D3DModel();
+	model->LoadFile("../Media/spacecraft_new.dae");
+	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	float4x4 mat,trans;
+	Math::Scale(mat, 10);
+	Math::Translate(trans,0,10,0);
+	model->SetModelMatrix(trans * mat);
+	ship_ = new SceneObject(model);
+	ship_->AddToScene();
+
 	timer_ = new Timer();
 	timer_->Retart();
 	
 	first_person_ = false;
 	pitch_angle_ = 0;
-	speed_ = 0.5;
+	speed_ = 2.5;
 	Camera* camera = Context::Instance().AppInstance().GetCamera();
-	cam_pos_ = float3(-5,0,0);
-	cam_look_ = float3(1,0,0);
+	cam_pos_ = float3(-144.78,183.80,0);
+	cam_look_ = float3(-144.11,183.06,0);
 	camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
 }
 
@@ -63,9 +73,14 @@ void MyApp::Update()
 	{
 		Camera* camera = Context::Instance().AppInstance().GetCamera();
 		camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
+
+		float4x4 mat,trans;
+		Math::Scale(mat, 10);
+		Math::Translate(trans,0,10*Math::Cos(timer_->Time()/1000.0f),0);
+		ship_->GetRenderElement()->SetModelMatrix(trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-	//spot_light_->SetDir(float3(-0.5,-1,Math::Cos(timer_->Time()/1000.0f) * Math::PI / 6));
+	spot_light_->SetDir(float3(-0.5,Math::Sin(timer_->Time()/1000.0f),Math::Cos(timer_->Time()/1000.0f)));
 }
 
 void MyApp::OnKeyDown( WPARAM key_para )
