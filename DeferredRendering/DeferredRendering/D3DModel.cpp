@@ -47,7 +47,7 @@ namespace MocapGE
 			Camera* camera = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetFrameCamera();
 			float4x4 view_mat = camera->GetViewMatirx();
 			float4x4 world_inv_transpose = Math::InverTranspose( meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
-			shader_object_->SetMatrixVariable("g_world_inv_transpose", world_inv_transpose);
+			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
 			meshes_[i]->SetRenderParameters();
 			//set mesh's texture
@@ -55,6 +55,16 @@ namespace MocapGE
 			if(mat->diffuse_tex != 0)
 			{
 				shader_object_->SetReource("mesh_diffuse",tex_srvs_[mat->diffuse_tex-1], 1);
+			}
+			if(mat->normalmap_tex != 0)
+			{
+				shader_object_->SetBool("g_normal_map", true);
+				//set normal map there
+				shader_object_->SetReource("normal_map_tex",tex_srvs_[mat->normalmap_tex-1], 1);
+			}
+			else
+			{
+				shader_object_->SetBool("g_normal_map", false);
 			}
 			//render
 			meshes_[i]->Render(pass_index);
@@ -87,7 +97,7 @@ namespace MocapGE
 		if(render_engine->GetRenderSetting().deferred_rendering)
 			d3d_shader_object->SetTechnique("GbufferTech");
 		d3d_shader_object->SetMatrixVariable("g_world_matrix");
-		d3d_shader_object->SetMatrixVariable("g_world_inv_transpose");
+		d3d_shader_object->SetMatrixVariable("g_mwv_inv_transpose");
 		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
 		d3d_shader_object->SetMatrixVariable("g_view_matrix");
 		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");
@@ -99,6 +109,7 @@ namespace MocapGE
 
 		d3d_shader_object->SetBool("g_pom_enable");
 		d3d_shader_object->SetBool("g_pom_enable", pom_enabled_);
+		d3d_shader_object->SetBool("g_normal_map");
 		d3d_shader_object->SetShaderResourceVariable("normal_map_tex");
 
 		//d3d_shader_object->SetVectorVariable("g_light_color");

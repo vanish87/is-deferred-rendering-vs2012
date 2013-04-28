@@ -108,12 +108,11 @@ namespace MocapGE
 	{
 		shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetMatrixVariable("g_world_matrix");
-		shander_object->SetMatrixVariable("g_world_inv_transpose");
+		shander_object->SetMatrixVariable("g_mwv_inv_transpose");
 		shander_object->SetMatrixVariable("g_view_proj_matrix");
 		shander_object->SetMatrixVariable("g_view_matrix");
 		shander_object->SetMatrixVariable("g_inv_proj_matrix");
 		shander_object->SetMatrixVariable("g_inv_view_matrix");
-		shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetVectorVariable("g_eye_pos");
 		shander_object->SetVectorVariable("g_eye_z");
 

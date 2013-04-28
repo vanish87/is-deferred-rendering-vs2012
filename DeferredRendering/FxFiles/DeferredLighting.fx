@@ -35,20 +35,24 @@ SamplerState ShadowMapSampler
 
 cbuffer cbPerObject
 {
+	//model matrix
 	float4x4 g_world_matrix;
+	//mesh_matrix
 	float4x4 g_model_matrix;
 	float4x4 g_view_matrix;
 	float4x4 g_view_proj_matrix;
-	float4x4 g_world_inv_transpose;
+	float4x4 g_mwv_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
 	Material gMaterial;
 
-	
+	//not use
 	float4x4 g_shadow_transform; 
+
 	float4x4 g_light_view_proj; 
 
 	bool g_pom_enable;
+	bool g_normal_map;
 };
 
 
@@ -84,10 +88,10 @@ VertexOut GbufferVS(VertexIn vin)
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
 	vout.pos = mul(float4(vin.pos, 1.0f), mvp_matrix);
-// 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_world_inv_transpose));
-// 	vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_world_inv_transpose));
+// 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
+// 	vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
 // 	//trust model input come with orthorch
-// 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_world_inv_transpose));
+// 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_mwv_inv_transpose));
 	vout.tex_cood = vin.tex_cood;    
 
 	float3 normalWS = mul(vin.normal, (float3x3)world_matrix);
@@ -120,77 +124,96 @@ struct GbufferPSOutput
 GbufferPSOutput GbufferPS(VertexOut pin)
 {
 	GbufferPSOutput output;
+	float3 normalTS;
+	float3 normalWS;
+	float3 mat_diffuse;
+	if(g_pom_enable)
+	{
+		int g_nMaxSamples = 100;
+		int g_nMinSamples = 12;
+		float fHeightMapScale = 0.08;
+		float fParallaxLimit = length((pin.vViewTS.xy) / pin.vViewTS.z);
+		fParallaxLimit *= fHeightMapScale;
 
-// 	int g_nMaxSamples = 100;
-// 	int g_nMinSamples = 12;
-// 	float fHeightMapScale = 0.08;
-// 	float fParallaxLimit = length((pin.vViewTS.xy) / pin.vViewTS.z);
-// 	fParallaxLimit *= fHeightMapScale;
-// 
-// 	float2 vOffset = normalize( float2(-pin.vViewTS.x, pin.vViewTS.y) );
-// 	vOffset = vOffset * fParallaxLimit;
-// 
-// 	int nNumSamples = (int) lerp( g_nMinSamples, g_nMaxSamples,dot(  pin.vViewTS,  pin.vNormalTS ));
-// 	float fStepSize = 1.0f / nNumSamples;
-// 
-// 	float2 dx, dy;
-// 	dx = ddx( pin.tex_cood );
-// 	dy = ddy( pin.tex_cood );
-// 
-// 	float2 vOffsetStep = fStepSize * vOffset;
-// 	float2 vCurrOffset = 0.0f;
-// 	float2 vLastOffset = 0.0f;
-// 	float2 vFinalOffset = 0.0f;
-// 
-// 	float4 vCurrSample;
-// 	float4  vLastSample;
-// 
-// 	float stepHeight = 1.0;
-// 	int nCurrSample = 0;
-// 
-// 	while( nCurrSample < nNumSamples )
-// 	{
-// 		vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood + vCurrOffset, dx, dy );
-// 
-// 		if ( vCurrSample.a > stepHeight )
-// 	   {
-// 		  float Ua = (vLastSample.a - (stepHeight+fStepSize))  / ( fStepSize + (vCurrSample.a - vLastSample.a));
-// 		  vFinalOffset = vLastOffset + Ua * vOffsetStep;
-// 
-// 		  vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood  + vFinalOffset, dx, dy );
-// 		  nCurrSample = nNumSamples + 1;
-// 	   }
-// 		else
-// 	   {
-// 		  nCurrSample++;
-// 		  stepHeight -= fStepSize;
-// 		  vLastOffset = vCurrOffset;
-// 		  vCurrOffset += vOffsetStep;
-// 		  vLastSample = vCurrSample;
-// 	   }
-// 	}
+		float2 vOffset = normalize( float2(-pin.vViewTS.x, pin.vViewTS.y) );
+		vOffset = vOffset * fParallaxLimit;
 
+		int nNumSamples = (int) lerp( g_nMinSamples, g_nMaxSamples,dot(  pin.vViewTS,  pin.vNormalTS ));
+		float fStepSize = 1.0f / nNumSamples;
+
+		float2 dx, dy;
+		dx = ddx( pin.tex_cood );
+		dy = ddy( pin.tex_cood );
+
+		float2 vOffsetStep = fStepSize * vOffset;
+		float2 vCurrOffset = 0.0f;
+		float2 vLastOffset = 0.0f;
+		float2 vFinalOffset = 0.0f;
+
+		float4 vCurrSample;
+		float4  vLastSample;
+
+		float stepHeight = 1.0;
+		int nCurrSample = 0;
+
+		while( nCurrSample < nNumSamples )
+		{
+			vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood + vCurrOffset, dx, dy );
+
+			if ( vCurrSample.a > stepHeight )
+		   {
+			  float Ua = (vLastSample.a - (stepHeight+fStepSize))  / ( fStepSize + (vCurrSample.a - vLastSample.a));
+			  vFinalOffset = vLastOffset + Ua * vOffsetStep;
+
+			  vCurrSample = normal_map_tex.SampleGrad( MeshTextureSampler, pin.tex_cood  + vFinalOffset, dx, dy );
+			  nCurrSample = nNumSamples + 1;
+		   }
+			else
+		   {
+			  nCurrSample++;
+			  stepHeight -= fStepSize;
+			  vLastOffset = vCurrOffset;
+			  vCurrOffset += vOffsetStep;
+			  vLastSample = vCurrSample;
+		   }
+		}
+		float3 N = normalize(pin.normalWS);
+		float3 T = normalize(pin.tangentWS - dot(pin.tangentWS, N) * N);
+		float3 B = cross(N,T);
+		float3x3 TtoW = float3x3(T, B, N);
+		//TS normal + height
+		normalTS = vCurrSample.rgb;
+		normalWS = mul( normalTS, TtoW );
+		mat_diffuse = mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood  + vFinalOffset).rgb;
+	}
+	//not pom
+	else
+	{
+		//normal map	
+		if(g_normal_map)
+		{
+			float3 N = normalize(pin.normalWS);
+			float3 T = normalize(pin.tangentWS - dot(pin.tangentWS, N) * N);
+			float3 B = cross(N,T);
+			float3x3 TtoW = float3x3(T, B, N);
+			normalTS = normal_map_tex.Sample( MeshTextureSampler, pin.tex_cood).rgb;
+			normalWS = mul( normalTS, TtoW );
+		}
+		else
+			normalWS = pin.normalWS;
+
+		mat_diffuse = mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood ).rgb;
+
+	}
 	
-	//normal map
-	
-	float3 N = normalize(pin.normalWS);
-	float3 T = normalize(pin.tangentWS - dot(pin.tangentWS, N) * N);
-	float3 B = cross(N,T);
-	float3x3 TtoW = float3x3(T, B, N);
-	//TS normal + height
-	//float3 normalTS = normal_map_tex.Sample( MeshTextureSampler, pin.tex_cood).rgb;
-	//if(pom)
-	//	float3 normalTS = vCurrSample.rgb;
-	//else
-		float3 normalTS = pin.vNormalTS;
-	//normalTS = normalize( normalTS * 2.0f - 1.0f );
-	float3 normalWS = mul( normalTS, TtoW );
 	float3 normalVS = mul(normalWS, (float3x3)g_view_matrix);
 
+	//view space normal + mat.Shininess
 	output.Normal = float4(normalVS, gMaterial.Shininess);	
 	//combines Mat with Tex color
-	output.Diffuse  = float4(mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood ).rgb * gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
+	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
+	//only for ssdo
 	output.PositionWS = float4(pin.posWS,1.0f);
 
 	return output;
@@ -237,14 +260,6 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float3 view_ray_vec = pin.view_ray;
 	float depth = depth_tex.Load( samplelndices ).r;
 
-	float zf = 1000.0f;
-	float zn = 1.0f;
-	float q = zf/ (zf-zn);
-	//view space Z
-	//float linear_depth = zn * q / (q - depth);
-
-	//float viewZProj = dot(g_eye_z, view_ray_vec);
-	//float3 positionWS = g_eye_pos + view_ray_vec * (linear_depth / viewZProj);
 	float3 positionVS = view_ray_vec * depth;
 
 	//shadowing
@@ -259,9 +274,10 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	pos_light /= pos_light.w;
 	pos_light.x = pos_light.x / 2 + 0.5f;
 	pos_light.y = -pos_light.y / 2 + 0.5f;
-	//float shadow_depth = shadow_map_tex.Load( samplelndices ).r;
-	//float shadow_depth  = shadow_map_tex.Sample(ShadowMapSampler, pos_light.xy).r;
-	//shadow_depth = zn * q / (q - shadow_depth);
+	
+	float zf = 1000.0f;
+	float zn = 1.0f;
+	float q = zf/ (zf-zn);
 	float pos_depth = pos_light.z;
 	pos_depth = zn * q / (q - pos_depth);
 
@@ -285,24 +301,12 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 
 	float shadow = max(p, p_max);
-	//float shadow =1;
-	//if(light.type == 1 && shadow_depth != zn && shadow_depth < pos_depth - 1   )
-	//	shadow = 0;
-	//if(depth==1.0f)world_pos=float3(0,0,0);
-	//else{
-		//float px = ((( 2.0f * pin.pos.x) / 1280)  - 1.0f);
-		//float py = (((-2.0f * pin.pos.y) / 800) + 1.0f);
-		//float4 vPositionCS = float4(px, py, 1.0f, 1.0f);
-		//float4 vPositionPS = mul(vPositionCS, g_inv_proj_matrix);
-		//float4 vPositionVS = float4(vPositionPS.xy/ vPositionPS.ww, linear_depth, 1.0f);
-		//vPositionVS = mul(positionVS, g_inv_view_matrix);
-		//world_pos = positionVS;
-		//world_pos = positionVS;
-	//}
-	
+	//no shadow for point light
+	if(light.type == 0)
+		shadow = 0;
 	if(0)
 	{
-		//shadow_depth /=1000.0f;
+		return float4(moments.x/1000 ,moments.x/1000,moments.x/1000 ,1);
 		return world_pos;
 		//return float4(shadow_map_tex.Load( samplelndices ).rrr/1000.0f, 1.0f);
 		//return float4(shadow_depth,shadow_depth,shadow_depth,1.0f);
@@ -315,7 +319,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	if(normal.x ==0 && normal.y ==0&& normal.z ==0)
 		return float4(1,1,1,0);
 
-	normal = mul(normal, (float3x3)g_view_matrix);
+	//normal = mul(normal, (float3x3)g_view_matrix);
 	float shininess = normal_t.w;
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );

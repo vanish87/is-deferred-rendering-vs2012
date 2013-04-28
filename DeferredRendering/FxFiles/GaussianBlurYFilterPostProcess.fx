@@ -4,7 +4,7 @@ cbuffer cbPerObject
 	float4x4 g_model_matrix;
 	float4x4 g_view_matrix;
 	float4x4 g_view_proj_matrix;
-	float4x4 g_world_inv_transpose;
+	float4x4 g_mwv_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
 };
@@ -59,7 +59,7 @@ PSOutput PS(VertexOut pin)
 	float blurSize = 1.0f/800.0f;
 	PSOutput output;	
 	float4 sum =0.0;
-	bool box = true;
+	bool box = false;
 
 	if(box)
 	{

@@ -96,7 +96,7 @@ namespace MocapGE
 
 		d3d_shader_object->SetShaderResourceVariable("background_tex");
 		d3d_shader_object->SetMatrixVariable("g_world_matrix");
-		d3d_shader_object->SetMatrixVariable("g_world_inv_transpose");
+		d3d_shader_object->SetMatrixVariable("g_mwv_inv_transpose");
 		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
 		d3d_shader_object->SetMatrixVariable("g_view_matrix");
 		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");
