@@ -66,7 +66,7 @@ namespace MocapGE
 		void GenerateTangentsAndBitangents( const aiMesh* const & mesh );
 		void GenerateTexCoord( const aiMesh* const & mesh );
 
-		void ProcessMaterials(const aiMaterial* mMaterials );
+		void ProcessMaterials(aiMaterial** const mMaterials );
 	protected:
 		std::vector<Mesh*> meshes_;
 		std::vector<Material*> materials_;

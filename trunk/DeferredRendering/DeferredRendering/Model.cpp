@@ -296,10 +296,10 @@ namespace MocapGE
 		}
 		if(ai_scene_->HasMaterials())
 		{
-			ProcessMaterials(*ai_scene_->mMaterials);
+			ProcessMaterials(ai_scene_->mMaterials);
 		}
 
-
+		Math::Identity(model_matrix_);
 	}
 
 
@@ -750,25 +750,15 @@ namespace MocapGE
 				vb[j].tangent.x()   = tangent.x;	 vb[j].tangent.y() = tangent.y;		vb[j].tangent.z() = tangent.z;
 				vb[j].bitangent.x() = bitangent.x;	 vb[j].bitangent.y() = bitangent.y; vb[j].bitangent.z() = bitangent.z;
 
-// 				std::cout<<vb[j].position.x()<<" "<<vb[j].position.y()<<" "<<vb[j].position.z()<<std::endl;
-// 				std::cout<<vb[j].normal.x()<<" "<<vb[j].normal.y()<<" "<<vb[j].normal.z()<<std::endl;
-// 				std::cout<<vb[j].uv.x()<<" "<<vb[j].uv.y()<<std::endl;
-// 				std::cout<<vb[j].tangent.x()<<" "<<vb[j].tangent.y()<<" "<<vb[j].tangent.z()<<std::endl;
-// 				std::cout<<vb[j].bitangent.x()<<" "<<vb[j].bitangent.y()<<" "<<vb[j].bitangent.z()<<std::endl<<std::endl;
-			/*	ib[j]=j;*/
 			}
-			int cout = 0;
-			int j=0;
-			for (unsigned int x = 0; x < mesh->mNumFaces; ++x){
-				for (unsigned int a = 0; a < mesh->mFaces[x].mNumIndices; ++a)
+			size_t count = 0;
+			for (size_t j = 0; j < mesh->mNumFaces; ++j){
+				for (size_t k = 0; k < mesh->mFaces[j].mNumIndices; ++k)
 				{			
-					 ib[j++]=mesh->mFaces[x].mIndices[a];
+					 ib[count++]=mesh->mFaces[j].mIndices[k];
 				}
 			}
-			for(size_t j = 0; j< i_size; ++j)
-			{
-				PRINT(ib[j]);
-			}
+
 			//call MakeRenderLayout
 			RenderLayout* render_layout = Context::Instance().GetRenderFactory().MakeRenderLayout();
 			//call MakeRenderBuffer(Vertex)
@@ -807,6 +797,7 @@ namespace MocapGE
 			my_mat[1][0] = mat[1][0];my_mat[1][1] = mat[1][1];my_mat[1][2] = mat[1][2];my_mat[1][3] = mat[1][3];
 			my_mat[2][0] = mat[2][0];my_mat[2][1] = mat[2][1];my_mat[2][2] = mat[2][2];my_mat[2][3] = mat[2][3];
 			my_mat[3][0] = mat[3][0];my_mat[3][1] = mat[3][1];my_mat[3][2] = mat[3][2];my_mat[3][3] = mat[3][3];
+			my_mat = Math::Transpose(my_mat);
 			this->AddMesh(new MocapGE::Mesh(name, render_layout, my_mat, vb, ib, mesh->mMaterialIndex));
 		}
 
@@ -829,17 +820,15 @@ namespace MocapGE
 		throw std::exception("The method or operation is not implemented.");
 	}
 
-	void Model::ProcessMaterials(const aiMaterial* materials )
+	void Model::ProcessMaterials(aiMaterial** const materials )
 	{
 		for(size_t i = 0;i < ai_scene_->mNumMaterials; ++i)
 		{
 			Material* mat = new Material();
-			const aiMaterial* ai_mat = &materials[i];
+			const aiMaterial& ai_mat = *materials[i];
 
 			aiColor4D color;
-			materials_.push_back(mat);
-			return;
-			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_DIFFUSE, color))
+			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_COLOR_DIFFUSE, color))
 			{
 				mat->diffuse.x() = color.r;
 				mat->diffuse.y() = color.g;
@@ -851,7 +840,7 @@ namespace MocapGE
 				PRINT("no diffuse color");
 			}
 
-			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_SPECULAR, color))
+			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_COLOR_SPECULAR, color))
 			{
 				mat->specular.x() = color.r;
 				mat->specular.y() = color.g;
@@ -863,7 +852,7 @@ namespace MocapGE
 				PRINT("no spacular color");
 			}
 
-			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_COLOR_AMBIENT, color))
+			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_COLOR_AMBIENT, color))
 			{
 				mat->ambient.x() = color.r;
 				mat->ambient.y() = color.g;
@@ -875,13 +864,13 @@ namespace MocapGE
 				PRINT("no ambient color");
 			}
 
-			if(AI_SUCCESS != ai_mat->Get(AI_MATKEY_SHININESS, mat->shininess))
+			if(AI_SUCCESS != ai_mat.Get(AI_MATKEY_SHININESS, mat->shininess))
 			{
 				PRINT("no shininess");
 			}
 			
 			aiString szPath;
-			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), szPath))
+			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_TEXTURE_DIFFUSE(0), szPath))
 			{
 				Texture *tex = LoadTexture(szPath.C_Str());
 				if(tex)
@@ -889,7 +878,7 @@ namespace MocapGE
 					textures_.push_back(tex);
 					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
 					//index 0 reserved for null
-					//mat->diffuse_tex = textures_.size();
+					mat->diffuse_tex = textures_.size();
 				}
 			}
 			else
@@ -897,7 +886,7 @@ namespace MocapGE
 				PRINT("no difusse texture");
 			}
 
-			if(AI_SUCCESS == ai_mat->Get(AI_MATKEY_TEXTURE_NORMALS(0), szPath))
+			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_TEXTURE_NORMALS(0), szPath))
 			{
 
 				Texture *tex = LoadTexture(szPath.C_Str());
@@ -907,7 +896,7 @@ namespace MocapGE
 					textures_.push_back(tex);
 					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
 					//index 0 reserved for null
-					//mat->normalmap_tex = textures_.size();
+					mat->normalmap_tex = textures_.size();
 				}
 			}
 			else

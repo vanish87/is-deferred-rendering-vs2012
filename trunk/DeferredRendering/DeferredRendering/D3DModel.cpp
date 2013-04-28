@@ -14,6 +14,7 @@ namespace MocapGE
 	void D3DModel::LoadFile( std::string file_name )
 	{
 		Model::LoadFile(file_name);
+		PRINT(file_name + " loaded");
 	}
 
 	void D3DModel::SetRenderParameters()
@@ -51,9 +52,9 @@ namespace MocapGE
 			meshes_[i]->SetRenderParameters();
 			//set mesh's texture
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
-			//if(mat->diffuse_tex != 0)
+			if(mat->diffuse_tex != 0)
 			{
-				//shader_object_->SetReource("mesh_diffuse",tex_srvs_[0], 1);
+				shader_object_->SetReource("mesh_diffuse",tex_srvs_[mat->diffuse_tex-1], 1);
 			}
 			//render
 			meshes_[i]->Render(pass_index);
