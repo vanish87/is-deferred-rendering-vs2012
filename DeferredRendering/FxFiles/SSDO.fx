@@ -31,7 +31,6 @@ struct VertexOut
 {
 	float4 pos			: SV_POSITION;
 	float2 tex			: TEXCOORD0;	
-	float3 view_ray     : VIEWRAY;
 };
 struct PSOutput
 {
@@ -50,19 +49,13 @@ VertexOut VS(VertexIn vin)
 	VertexOut vout;
     vout.pos = float4(vin.pos.xyz, 1.0f);
 	vout.tex = float2(vin.pos.x * 0.5 + 0.5, -vin.pos.y * 0.5 + 0.5);
-	float3 positionVS = mul( float4(vin.pos,1.0f), g_inv_proj_matrix ).xyz;
-	vout.view_ray = float3( positionVS.xy / positionVS.z, 1.0f );
     return vout;
 }
 
 PSOutput PS(VertexOut pin) 
 {
-	float zf = 1000.0f;
-	float zn = 1.0f;
-	float q = zf/ (zf-zn);
-
 	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float4 world_pos =  input_tex_0.Load( samplelndices ).rgba;
+	float3 world_pos =  input_tex_0.Load( samplelndices ).rgb;
 
 	float3 points[] =
 	{
@@ -101,13 +94,14 @@ PSOutput PS(VertexOut pin)
 	};
 
 	const int num_samples = 32;
-	float g_occlusion_radius = 0.28;
-	float g_occlusion_max_distance = 0.64;
+	float g_occlusion_radius = 0.26;
+	float g_occlusion_max_distance = 0.68;
 	float2 g_resolution = float2(1280,800);
 	float2 noise_texture_size = float2(4,4);
-	float3  center_pos = world_pos.xyz;
+	float3 center_pos = mul(float4(world_pos.xyz,1.0), g_view_matrix).xyz;
+	//float3 eye_pos = g_inv_view_matrix[3].xyz;
 
-	float  center_depth  = distance(g_eye_pos, center_pos);
+	float  center_depth  = distance(float3(0,0,0), center_pos);
 
 	float radius = g_occlusion_radius / center_depth;
 	float max_distance_inv = 1.f / g_occlusion_max_distance;
@@ -116,8 +110,8 @@ PSOutput PS(VertexOut pin)
 	float3 noise = input_tex_2.Sample(ShadowMapSampler, pin.tex*g_resolution.xy/noise_texture_size).xyz*2-1;
 
 	float4 normal_t = input_tex_1.Load( samplelndices );
-	float4 normalWS = mul(float4(normal_t.xyz,1.0), g_inv_view_matrix);
-	float3 center_normal = normalWS.xyz;
+	float4 normalVS = normal_t;
+	float3 center_normal = normalVS.xyz;
 
 	float4 occlusion_sh2 = 0;
 
@@ -137,8 +131,8 @@ PSOutput PS(VertexOut pin)
 	{
 	    float2 textureOffset = reflect( points[ i ].xy, noise.xy ).xy * radius;
 		float2 sample_tex = pin.tex + textureOffset;
-		float4 world_pos = input_tex_0.SampleGrad( ShadowMapSampler, sample_tex, dx, dy ).rgba;
-		float3 sample_pos = world_pos.xyz;
+		float4 world_pos = input_tex_0.SampleGrad( ShadowMapSampler, sample_tex, dx, dy ).rgba;		
+		float3 sample_pos = mul(world_pos, g_view_matrix).xyz;
 		float3 center_to_sample = sample_pos - center_pos;
 		float dist = length(center_to_sample);
 		float3 center_to_sample_normalized = center_to_sample / dist;

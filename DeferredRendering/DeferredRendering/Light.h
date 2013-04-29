@@ -17,7 +17,7 @@ namespace MocapGE
 			:light_type_(light_type)
 		{
 			light_color_ = float4(1, 1, 1, 1);
-			virtual_camera_ = new Camera(1);
+			virtual_camera_ = new Camera(1280/800.0f);
 		}
 
 		void SetType(LightType type);

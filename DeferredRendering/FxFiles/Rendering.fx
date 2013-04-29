@@ -86,7 +86,7 @@ float4 CalPreLighting(	 in float3 normal,
 	
 	// Start with a sum of zero. 
 	// Default ambeint color = (0.2, 0.2 0.2)
-	float4 litColor = float4(0.2f, 0.2f, 0.2f, 0.0f);
+	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	//uint lights_size, dummy;
@@ -164,10 +164,10 @@ float4 CalPreLighting(	 in float3 normal,
 						
 						float light_occlusion = 1-saturate(dot(float4(-normalize(pos_eye),1), occlusion));
 
-						diffuse = diffuse * spot * shadow;
+						diffuse = diffuse * spot * light_occlusion;
 						spec = spec * spot * shadow;
 
-						float4 acc_color = float4(diffuse.rgb , spec)* light_occlusion;
+						float4 acc_color = float4(diffuse.rgb , spec);
 						litColor = litColor + acc_color;
 						
 						break;

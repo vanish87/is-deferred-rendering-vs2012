@@ -26,9 +26,9 @@ void MyApp::InitObjects()
 
 	spot_light_ = new SpotLight();
 	spot_light_->SetPos(float3(50, 500, 0));
-	spot_light_->SetDir(float3(0,0,0)-spot_light_->GetPos());
-	spot_light_->SetInnerAngle(Math::PI / 24);
-	spot_light_->SetOuterAngle(Math::PI / 14);
+	spot_light_->SetDir(float3(0,10,0) - float3(50, 500, 0));
+	spot_light_->SetInnerAngle(Math::PI / 6);
+	spot_light_->SetOuterAngle(Math::PI / 4);
 	spot_light_->AddToScene();
 
 	D3DModel *model = new D3DModel();
@@ -74,13 +74,14 @@ void MyApp::Update()
 		Camera* camera = Context::Instance().AppInstance().GetCamera();
 		camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
 
-		float4x4 mat,trans;
-		Math::Scale(mat, 10);
-		Math::Translate(trans,0,10*Math::Cos(timer_->Time()/1000.0f),0);
-		ship_->GetRenderElement()->SetModelMatrix(trans * mat);
+		float4x4 mat,trans, rotate;
+		Math::Scale(mat, 30);
+		Math::Translate(trans,0,10,0);
+		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Time()/1000.0f));
+		ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-	spot_light_->SetDir(float3(-0.5,Math::Sin(timer_->Time()/1000.0f),Math::Cos(timer_->Time()/1000.0f)));
+   // spot_light_->SetDir(float3(0,Math::Sin(timer_->Time()/10000.0f),Math::Cos(timer_->Time()/10000.0f)));
 }
 
 void MyApp::OnKeyDown( WPARAM key_para )
@@ -130,7 +131,7 @@ void MyApp::OnKeyDown( WPARAM key_para )
 		case 'X':
 			left = float3(0,1,0);
 
-			pitch_angle_ = Math::PI/180;
+			pitch_angle_ = - Math::PI/180;
 			Math::Identity(mat);
 			Math::RotationAxis(mat, left, pitch_angle_);
 
@@ -142,7 +143,7 @@ void MyApp::OnKeyDown( WPARAM key_para )
 		case 'Z':
 			left = float3(0,1,0);
 
-			pitch_angle_ = -Math::PI/180;
+			pitch_angle_ = Math::PI/180;
 			Math::Identity(mat);
 			Math::RotationAxis(mat, left, pitch_angle_);
 
