@@ -91,7 +91,7 @@ namespace MocapGE
 
 	void SpotLight::UpdateCamera()
 	{
-		virtual_camera_->SetProjection(outer_angle_ * 2, 1, 1.0f, 1000.0f);
+		virtual_camera_->SetProjection(outer_angle_ * 2, 1280/800.0f, 1.0f, 1000.0f);
 		//TODO : rotate up vector
 		dir_ = Math::Normalize(dir_);
 		virtual_camera_->SetView(pos_, pos_+ dir_,float3(0, 1, 0));

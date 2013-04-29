@@ -251,7 +251,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	int3 samplelndices = int3( pin.pos.xy, 0 );
 	float3 world_pos = normal_tex.Load( samplelndices ).xyz;
-	return float4(world_pos.xyz,1.0f);
+	return float4(world_pos.xyz/10000,1.0f);
 	}
 	else{
 		
@@ -283,7 +283,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	//pos_depth = length(mul(light.position.xyz,g_inv_view_matrix)  - world_pos);
 
-	float min_variance = 0.6;
+	float min_variance = 0.3;
 	float bleeding_reduce = 0.75;
 
 	//float2 moments = float2(shadow_depth, shadow_depth*shadow_depth);
@@ -313,6 +313,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	}
 
 	//Get Infor from g-buffer
+	//vs normal
 	float4 normal_t = normal_tex.Load( samplelndices );
 	float3 normal = normal_t.xyz;
 	//set for those mesh that do not want to do lighting
@@ -323,6 +324,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float shininess = normal_t.w;
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
+	//occlusion = float4(0,0,0,0);
 	if(0)
 		return occlusion;
 	//float4 pre_color = lighting_tex.Load( samplelndices );

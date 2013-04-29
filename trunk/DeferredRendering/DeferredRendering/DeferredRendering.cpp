@@ -135,7 +135,8 @@ namespace MocapGE
 		ssdo_so_->SetTechnique("PPTech");
 
 		D3DModel *random_tex_dummy = new D3DModel();
-		noise_tex_ = random_tex_dummy->LoadTexture("..\\Media\\noise.png");
+		noise_tex_ = random_tex_dummy->LoadTexture("../Media/noise.png");
+		delete random_tex_dummy;
 
 		occlusion_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
 			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
@@ -399,10 +400,10 @@ namespace MocapGE
 				
 				
 
-				//ssdo_pp_->SetCamera(back_frame_camera_);
-				//ssdo_pp_->Apply();
-				//occlusion_xblur_pp_->Apply();
- 				//occlusion_yblur_pp_->Apply();
+				ssdo_pp_->SetCamera(back_frame_camera_);
+				ssdo_pp_->Apply();
+				occlusion_xblur_pp_->Apply();
+ 				occlusion_yblur_pp_->Apply();
 
 
 				//set gbuffer as input textures		
