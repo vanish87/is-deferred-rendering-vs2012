@@ -392,6 +392,7 @@ namespace MocapGE
 						//reset
 						(*re)->GetShaderObject()->SetTechnique("GbufferTech");
 					}
+					Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 					linearize_shadow_map_pp_->Apply();
 					shadow_map_xblur_pp_->Apply();
 					shadow_map_yblur_pp_->Apply();
