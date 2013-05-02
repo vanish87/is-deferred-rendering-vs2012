@@ -124,7 +124,7 @@ float4 CalPreLighting(	 in float3 normal,
 							//Clight * (N * Lc)
 							diffuse = light_color * diffuse_angle;
 							//pow(N*H, alpha) * Clight * (N * Lc)
-							spec    = spec_factor * light_color.r * diffuse_angle;//only one value(specular intensity) for spec
+							spec    = spec_factor * light_color.r;//only one value(specular intensity) for spec
 						}
 		
 						float4 acc_color = float4(diffuse.rgb , spec);
@@ -148,7 +148,7 @@ float4 CalPreLighting(	 in float3 normal,
 							//Clight * (N * Lc)
 							diffuse = light_color * diffuse_angle;
 							//pow(N*H, alpha) * Clight * (N * Lc)
-							spec    = spec_factor * light_color.r * diffuse_angle;//only one value(specular intensity) for spec
+							spec    = spec_factor * light_color.r;//only one value(specular intensity) for spec
 						}
 
 						float inner = light.inner_outer.x;
@@ -162,9 +162,9 @@ float4 CalPreLighting(	 in float3 normal,
 						//spot/= d*d;
 
 						
-						//float light_occlusion = 1-saturate(dot(float4(-normalize(pos_eye),1), occlusion));
+						float light_occlusion = 1-saturate(dot(float4(-normalize(pos_eye),1), occlusion));
 
-						diffuse = diffuse * spot * shadow;
+						diffuse = diffuse * spot * shadow * light_occlusion;
 						spec = spec * spot * shadow;
 
 						float4 acc_color = float4(diffuse.rgb , spec);

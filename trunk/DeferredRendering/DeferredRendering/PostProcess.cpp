@@ -92,6 +92,7 @@ namespace MocapGE
 		RenderEngine* re = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		re->SetDeferredRenderingState();
 		re->BindFrameBuffer(output_buffer_);
+		Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 		ShaderObject* shander_object = fullscreen_mesh_->GetShaderObject();
 		for(size_t i = 0; i < input_srv_.size(); ++i)
 		{
@@ -102,6 +103,7 @@ namespace MocapGE
 		fullscreen_mesh_->Render(0);
 		fullscreen_mesh_->EndRender();
 		re->SetNormalState();
+		Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 	}
 
 	void PostProcess::SetPPShader( ShaderObject* shander_object )

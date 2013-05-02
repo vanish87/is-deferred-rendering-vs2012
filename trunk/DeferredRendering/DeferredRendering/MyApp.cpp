@@ -21,8 +21,8 @@ void MyApp::InitObjects()
 {
 	//set up lights
 	point_light_ = new PointLight();
-	point_light_->SetPos(float3(50 ,0, 0));	
-	//point_light_->AddToScene();
+	point_light_->SetPos(float3(0 ,500, 0));	
+	point_light_->AddToScene();
 
 	spot_light_ = new SpotLight();
 	spot_light_->SetPos(float3(50, 500, 0));
@@ -78,10 +78,10 @@ void MyApp::Update()
 		Math::Scale(mat, 30);
 		Math::Translate(trans,0,10,0);
 		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Time()/1000.0f));
-		ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
+		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-   // spot_light_->SetDir(float3(0,Math::Sin(timer_->Time()/10000.0f),Math::Cos(timer_->Time()/10000.0f)));
+    //spot_light_->SetDir(float3(0,Math::Sin(timer_->Time()/10000.0f),Math::Cos(timer_->Time()/10000.0f)));
 }
 
 void MyApp::OnKeyDown( WPARAM key_para )
