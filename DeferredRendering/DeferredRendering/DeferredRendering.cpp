@@ -336,6 +336,7 @@ namespace MocapGE
 			float4x4 shadow_trans_mat;
 			float4x4 light_view_proj;
 			LightType type;
+
 			for (size_t i =0; i< lights.size(); i++)
 			{
 
@@ -391,7 +392,6 @@ namespace MocapGE
 						//reset
 						(*re)->GetShaderObject()->SetTechnique("GbufferTech");
 					}
-
 					linearize_shadow_map_pp_->Apply();
 					shadow_map_xblur_pp_->Apply();
 					shadow_map_yblur_pp_->Apply();
