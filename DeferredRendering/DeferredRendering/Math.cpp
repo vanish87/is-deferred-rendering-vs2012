@@ -257,6 +257,11 @@ namespace MocapGE
 			return true;
 		}
 
+		float Abs( float num )
+		{
+			return std::fabs(num);
+		}
+
 
 
 	}

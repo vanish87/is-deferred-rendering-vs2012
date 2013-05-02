@@ -7,7 +7,7 @@
 #include "D3DSkyDome.h"
 
 using namespace MocapGE;
-MyApp::MyApp(void) : App("The CentBebop Design")
+MyApp::MyApp(void) : App("Yuan Li-Deferred Rendering Demo")
 {
 
 }
@@ -21,26 +21,28 @@ void MyApp::InitObjects()
 {
 	//set up lights
 	point_light_ = new PointLight();
-	point_light_->SetPos(float3(0 ,500, 0));	
+	point_light_->SetPos(float3(0 ,200, 0));	
 	point_light_->AddToScene();
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(50, 500, 0));
+	spot_light_->SetPos(float3(50, 200, 0));
 	spot_light_->SetDir(float3(0,10,0) - float3(50, 500, 0));
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
 	spot_light_->AddToScene();
 
+	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
 	model->LoadFile("../Media/sponza.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	Math::Scale(mat, 0.5);
+	model->SetModelMatrix(mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
 	model = new D3DModel();
 	model->LoadFile("../Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
-	float4x4 mat,trans;
 	Math::Scale(mat, 10);
 	Math::Translate(trans,0,10,0);
 	model->SetModelMatrix(trans * mat);
@@ -54,9 +56,10 @@ void MyApp::InitObjects()
 	pitch_angle_ = 0;
 	speed_ = 2.5;
 	Camera* camera = Context::Instance().AppInstance().GetCamera();
-	cam_pos_ = float3(-144.78,183.80,0);
-	cam_look_ = float3(-144.11,183.06,0);
+	cam_pos_ = float3(82.2,270.87,-67.49);
+	cam_look_ = float3(81.78,270.16,-66.94);
 	camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
+	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
 }
 
 void MyApp::ReleaseObjects()
@@ -81,7 +84,7 @@ void MyApp::Update()
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0,Math::Sin(timer_->Time()/10000.0f),Math::Cos(timer_->Time()/10000.0f)));
+    spot_light_->SetDir(float3(0,-Math::Abs(Math::Sin(timer_->Time()/10000.0f)),Math::Cos(timer_->Time()/10000.0f)));
 }
 
 void MyApp::OnKeyDown( WPARAM key_para )
@@ -216,7 +219,7 @@ void MyApp::OnMouseUp( WPARAM mouse_para, int x, int y )
 int main()
 {
 	 _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	Context::Instance().LoadConfig("E:/13Spring/IS/DeferredRendering/DeferredRendering/Config.xml");
+	Context::Instance().LoadConfig("Config.xml");
 	ContextConfig cfg = Context::Instance().GetConfigure();
 	Context::Instance().Configure(cfg);
 

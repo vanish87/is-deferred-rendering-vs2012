@@ -331,6 +331,7 @@ namespace MocapGE
 			ret.z() = std::min(lhs.z(), rhs.z());
 			return ret;
 		}
+		float Abs( float num );
 	}
 }
 
