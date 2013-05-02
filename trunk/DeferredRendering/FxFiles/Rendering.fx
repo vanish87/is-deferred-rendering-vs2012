@@ -162,9 +162,9 @@ float4 CalPreLighting(	 in float3 normal,
 						//spot/= d*d;
 
 						
-						float light_occlusion = 1-saturate(dot(float4(-normalize(pos_eye),1), occlusion));
+						//float light_occlusion = 1-saturate(dot(float4(-normalize(pos_eye),1), occlusion));
 
-						diffuse = diffuse * spot * light_occlusion;
+						diffuse = diffuse * spot * shadow;
 						spec = spec * spot * shadow;
 
 						float4 acc_color = float4(diffuse.rgb , spec);

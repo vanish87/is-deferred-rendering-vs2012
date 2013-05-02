@@ -357,7 +357,7 @@ float4 FinalPS( in FinalVout pin): SV_Target
 	{
 	int3 samplelndices = int3( pin.pos.xy, 0 );
 	float4 world_pos = lighting_tex.Load( samplelndices );
-	return float4(world_pos.xyz,1.0f);
+	return float4(world_pos.xxx,1.0f);
 	}
 	else
 	{
