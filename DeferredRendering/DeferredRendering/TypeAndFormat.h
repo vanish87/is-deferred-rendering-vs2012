@@ -126,8 +126,9 @@ namespace MocapGE
 		float3 position;	
 		int type;
 		float3 direction;
-		int dummy;
+		float range;
 		float4 color;
+		float4 falloff;
 		float2 inner_outer;
 	};
 

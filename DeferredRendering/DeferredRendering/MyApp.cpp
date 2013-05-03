@@ -7,7 +7,7 @@
 #include "D3DSkyDome.h"
 
 using namespace MocapGE;
-MyApp::MyApp(void) : App("Yuan Li-Deferred Rendering Demo")
+MyApp::MyApp(void) : App("The CentBebop Design")
 {
 
 }
@@ -20,9 +20,13 @@ MyApp::~MyApp(void)
 void MyApp::InitObjects()
 {
 	//set up lights
-	point_light_ = new PointLight();
-	point_light_->SetPos(float3(0 ,200, 0));	
-	point_light_->AddToScene();
+	for(int i = -30; i < 30 ; ++i)
+	{
+		point_light_ = new PointLight();
+		point_light_->SetPos(float3(50 + i*20 ,10, 0));	
+		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
+		point_light_->AddToScene();
+	}
 
 	spot_light_ = new SpotLight();
 	spot_light_->SetPos(float3(50, 200, 0));
