@@ -15,8 +15,9 @@ struct Light
     float3 position;	
 	int type;
 	float3 direction;
-	int dummy;
+	float range;
     float4 color;
+	float4 falloff;
 	float2 inner_outer;
 };
 //StructuredBuffer<PointLight> gLight;
@@ -99,6 +100,12 @@ float4 CalPreLighting(	 in float3 normal,
 		float4 light_color = light.color;
 		float3 light_position = light.position;//view_pos
 
+		// The vector from the surface to the light.
+		float3 pos_light = light_position - position;//Lc
+		float d = length(pos_light);
+		if(d > light.falloff.w) 
+			return float4(0.0f, 0.0f, 0.0f, 0.0f);
+
 		float3 light_dir = light.direction;				
 		int type = light.type;
 
@@ -108,9 +115,7 @@ float4 CalPreLighting(	 in float3 normal,
 			{
 				//Point Light
 				case 0:	
-					{
-						// The vector from the surface to the light.
-						float3 pos_light = light_position - position;//Lc
+					{						
 						pos_light = normalize(pos_light);
 
 						float diffuse_angle = dot(pos_light, normal);//N * Lc (light vector = L)
@@ -120,13 +125,14 @@ float4 CalPreLighting(	 in float3 normal,
 							float3 H = normalize(pos_light + pos_eye);
 
 							float spec_factor = pow(max(dot(normal, H), 0.0f), specularPower);
-			
+							
+							float att = 1.0f / (light.falloff.x + light.falloff.y *d + light.falloff.z * d * d );
 							//Clight * (N * Lc)
-							diffuse = light_color * diffuse_angle;
+							diffuse = light_color * diffuse_angle * att;
 							//pow(N*H, alpha) * Clight * (N * Lc)
-							spec    = spec_factor * light_color.r;//only one value(specular intensity) for spec
+							spec    = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
 						}
-		
+						
 						float4 acc_color = float4(diffuse.rgb , spec);
 						litColor = litColor + acc_color;
 						break;
@@ -134,7 +140,6 @@ float4 CalPreLighting(	 in float3 normal,
 				//Spot Light
 				case 1:
 					{
-						float3 pos_light = light_position - position;//Lc
 						pos_light = normalize(pos_light);
 
 						float diffuse_angle = dot(pos_light, normal);//N * Lc (light vector = L)
@@ -144,11 +149,12 @@ float4 CalPreLighting(	 in float3 normal,
 							float3 H = normalize(pos_light + pos_eye);
 
 							float spec_factor = pow(max(dot(normal, H), 0.0f), specularPower);
-			
+							
+							float att = 1.0f / (light.falloff.x + light.falloff.y *d + light.falloff.z * d * d );
 							//Clight * (N * Lc)
-							diffuse = light_color * diffuse_angle;
+							diffuse = light_color * diffuse_angle * att;
 							//pow(N*H, alpha) * Clight * (N * Lc)
-							spec    = spec_factor * light_color.r;//only one value(specular intensity) for spec
+							spec    = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
 						}
 
 						float inner = light.inner_outer.x;

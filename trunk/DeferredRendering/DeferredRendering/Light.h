@@ -18,12 +18,32 @@ namespace MocapGE
 		{
 			light_color_ = float4(1, 1, 1, 1);
 			virtual_camera_ = new Camera(1280/800.0f);
+
+			switch (light_type)
+			{
+			case LT_POINT:
+				light_attrib_ = float4(0,0.1,0,300);
+				break;
+			case LT_SPOT:
+				light_attrib_ = float4(1,0,0,500);
+				break;
+			case LT_DERECTIONAL:
+				break;
+			default:
+				break;
+			}
 		}
 
 		void SetType(LightType type);
 		LightType GetType(){return light_type_;};
 		void SetColor(float4 color);
 		float4 GetColor(){return light_color_;};
+
+		void SetAttrib(float4 light_attrib);
+		float4 GetAttrib(){return light_attrib_;};
+
+		float GetRange();;
+		void SetRange(float range);
 
 		Camera* GetCamera(){return virtual_camera_;};
 		void SetCamera(Camera* camera);
@@ -37,6 +57,8 @@ namespace MocapGE
 		float4 light_color_;
 		LightType light_type_;
 
+		float4 light_attrib_;
+
 		Camera* virtual_camera_;
 	};
 
@@ -46,7 +68,7 @@ namespace MocapGE
 		PointLight(void);
 		~PointLight(void);
 
-		float3 GetPos(){return pos_;};
+		float3 GetPos();;
 		void SetPos(float3 pos);
 
 		virtual void UpdateCamera();

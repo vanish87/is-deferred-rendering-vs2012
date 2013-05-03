@@ -27,6 +27,20 @@ namespace MocapGE
 		virtual_camera_ = camera;
 	}
 
+	float Light::GetRange()
+	{
+		return light_attrib_.w();
+	}
+
+	void Light::SetRange( float range )
+	{
+		light_attrib_.w() = range;
+	}
+
+	void Light::SetAttrib( float4 light_attrib )
+	{
+		light_attrib_ = light_attrib;
+	}
 
 	PointLight::PointLight( void )
 		:Light(LT_POINT)
@@ -48,6 +62,13 @@ namespace MocapGE
 	{
 		throw std::exception("The method or operation is not implemented.");
 	}
+
+	MocapGE::float3 PointLight::GetPos()
+	{
+		return pos_;
+	}
+
+
 
 	SpotLight::SpotLight( void )
 		:Light(LT_SPOT)

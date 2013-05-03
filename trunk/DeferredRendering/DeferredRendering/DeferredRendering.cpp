@@ -342,6 +342,7 @@ namespace MocapGE
 
 				light_buffer[i].color = lights[i]->GetColor();
 				type = lights[i]->GetType();
+				light_buffer[i].falloff = lights[i]->GetAttrib();
 				switch (type)
 				{
 				case LT_POINT:
@@ -402,9 +403,9 @@ namespace MocapGE
 				
 
 				ssdo_pp_->SetCamera(back_frame_camera_);
-				ssdo_pp_->Apply();
-				occlusion_xblur_pp_->Apply();
- 				occlusion_yblur_pp_->Apply();
+				//ssdo_pp_->Apply();
+				//occlusion_xblur_pp_->Apply();
+ 				//occlusion_yblur_pp_->Apply();
 
 
 				//set gbuffer as input textures		

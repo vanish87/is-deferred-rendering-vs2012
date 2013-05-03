@@ -82,7 +82,7 @@ PSOutput PS(VertexOut pin)
     for( int i = 0; i < fFilterWidth; ++i )
         sum += input_tex_0.Sample( ShadowMapSampler, float2( fTexStart + fTexelOffset * i) ) * box_filter[i];
     
-    output.color =  sum;// box_w;
+    output.color =  sum/ box_w;
 	return output;
 	}
 	//pin.tex = float2(pin.pos.x * 0.5 + 0.5, -pin.pos.y * 0.5 + 0.5);
