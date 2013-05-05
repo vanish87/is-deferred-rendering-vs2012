@@ -153,9 +153,6 @@
     <ClCompile Include="D3DTexture.cpp">
       <Filter>D3D11Plugin\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABBox.h">
@@ -311,9 +308,6 @@
     <ClInclude Include="D3DTexture.h">
       <Filter>D3D11Plugin\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\FxFiles\GaussianBlurXFilterPostProcess.fx">
@@ -332,6 +326,9 @@
       <Filter>FxFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\FxFiles\DeferredLighting.fx">
+      <Filter>FxFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\FxFiles\SkyDome.fx">
       <Filter>FxFiles</Filter>
     </FxCompile>
   </ItemGroup>

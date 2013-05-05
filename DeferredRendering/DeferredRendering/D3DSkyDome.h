@@ -9,7 +9,6 @@
 
 #include "..\External\DDSTextureLoader.h"
 
-#pragma comment(lib, "..\\External\\DirectXTK.lib")
 
 namespace MocapGE
 {
