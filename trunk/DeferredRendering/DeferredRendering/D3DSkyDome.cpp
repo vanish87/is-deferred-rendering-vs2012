@@ -96,16 +96,12 @@ namespace MocapGE
 
 		d3d_shader_object->SetShaderResourceVariable("background_tex");
 		d3d_shader_object->SetMatrixVariable("g_world_matrix");
-		d3d_shader_object->SetMatrixVariable("g_mwv_inv_transpose");
 		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
 		d3d_shader_object->SetMatrixVariable("g_view_matrix");
 		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");
 		d3d_shader_object->SetMatrixVariable("g_inv_view_matrix");
 		d3d_shader_object->SetMatrixVariable("g_model_matrix");
-
-		d3d_shader_object->SetMatrixVariable("g_shadow_transform");
-		d3d_shader_object->SetMatrixVariable("g_light_view_proj");
-
+		
 		d3d_shader_object->SetVectorVariable("g_eye_pos");
 
 		sky_mesh_->SetShaderObject(d3d_shader_object);

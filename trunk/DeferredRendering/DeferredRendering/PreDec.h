@@ -10,7 +10,7 @@
 
 #pragma once
 #include <assert.h>
-#include <boost/smart_ptr.hpp>
+#include "boost/smart_ptr.hpp"
 
 #define PRINT(x) std::cout<<x<<std::endl;
 
@@ -34,18 +34,17 @@ namespace MocapGE
 
 	template <typename T>
 	class Vec2;
+	typedef Vec2<int32_t> int2;
+	typedef Vec2<float> float2;
+
 	template <typename T>
 	class Vec3;
+	typedef Vec3<int32_t> int3;
+	typedef Vec3<float> float3;
+
 	template <typename T>
 	class Vec4;
-
-	typedef Vec2<int32_t> int2;
-	typedef Vec3<int32_t> int3;
-	typedef Vec4<int32_t> int4;
-
-
-	typedef Vec2<float> float2;
-	typedef Vec3<float> float3;
+	typedef Vec4<int32_t> int4;	
 	typedef Vec4<float> float4;
 
  	template <typename T>
@@ -95,6 +94,7 @@ namespace MocapGE
 	class Context;
 
 	class PointLight;
+	class SpotLight;
 	
 
 }
