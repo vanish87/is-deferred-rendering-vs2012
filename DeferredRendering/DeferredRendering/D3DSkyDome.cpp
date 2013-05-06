@@ -55,7 +55,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		sky_mesh_ = new MocapGE::Mesh("SkyDome", render_layout, model_matrix, vb, ib);
+		sky_mesh_ = new MocapGE::Mesh("SkyDome", render_layout, model_matrix, vb, vertices.size(), ib);
 
 		model_matrix_ = model_matrix;
 	}

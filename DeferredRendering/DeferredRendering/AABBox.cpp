@@ -26,11 +26,13 @@ namespace MocapGE
 		for(size_t i=0; i< vcout; i++)
 		{
 			float3 pos = vertice[i]->position;
-
+			//std::cout<<pos.x()<<" "<<pos.y()<<" "<<pos.z()<<std::endl;
 			max = Math::Max(pos, max);
 			min = Math::Min(pos, min);
 		}
 
+		std::cout<<min.x()<<" "<<min.y()<<" "<<min.z()<<std::endl;
+		std::cout<<max.x()<<" "<<max.y()<<" "<<max.z()<<std::endl;
 		max_ = max;
 		min_ = min;
 	}

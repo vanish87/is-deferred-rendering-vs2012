@@ -95,6 +95,9 @@ namespace MocapGE
 		template <typename T>
 		Vec3<T> Min(Vec3<T> & lhs, Vec3<T> & rhs);
 
+		template <typename T>
+		T Clamp(const T& value, const T& min,const T& max );
+
 		bool IntersectRayAABB(Ray* ray, AABBox* aabb);
 		bool IntersectRayTriangle(Ray* ray, float3 a, float3 b, float3 c, float & t);
 	}

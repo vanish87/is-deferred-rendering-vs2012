@@ -52,7 +52,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		fullscreen_mesh_ = new MocapGE::Mesh("full screen quad", render_layout, model_matrix, vb, ib);
+		fullscreen_mesh_ = new MocapGE::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
 	}
 
 

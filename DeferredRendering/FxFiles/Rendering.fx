@@ -87,7 +87,7 @@ float4 CalPreLighting(	 in float3 normal,
 	
 	// Start with a sum of zero. 
 	// Default ambeint color = (0.2, 0.2 0.2)
-	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 litColor = float4(0.1f, 0.1f, 0.1f, 0.0f);
 
 	//float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	//uint lights_size, dummy;
