@@ -43,5 +43,10 @@ namespace MocapGE
 		return material_id_;
 	}
 
+	uint32_t Mesh::GetVSize()
+	{
+		return vsize_;
+	}
+
 
 }

@@ -408,7 +408,7 @@ BlendState final
 	DestBlend = Zero;
 	BlendOp[0] = ADD;
 	SrcBlendAlpha = One;
-	DestBlendAlpha = One;
+	DestBlendAlpha = Zero;
 	BlendOpAlpha[0] = ADD;
 	RenderTargetWriteMask[0] = 0x0f;
 

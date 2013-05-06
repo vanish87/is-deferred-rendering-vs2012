@@ -798,7 +798,8 @@ namespace MocapGE
 			my_mat[2][0] = mat[2][0];my_mat[2][1] = mat[2][1];my_mat[2][2] = mat[2][2];my_mat[2][3] = mat[2][3];
 			my_mat[3][0] = mat[3][0];my_mat[3][1] = mat[3][1];my_mat[3][2] = mat[3][2];my_mat[3][3] = mat[3][3];
 			my_mat = Math::Transpose(my_mat);
-			this->AddMesh(new MocapGE::Mesh(name, render_layout, my_mat, vb, ib, mesh->mMaterialIndex));
+			std::cout<<"Vertex count = " <<v_size<<std::endl;
+			this->AddMesh(new MocapGE::Mesh(name, render_layout, my_mat, vb, v_size, ib, mesh->mMaterialIndex));
 		}
 
 		for(size_t i = 0; i < node->mNumChildren; ++i)
