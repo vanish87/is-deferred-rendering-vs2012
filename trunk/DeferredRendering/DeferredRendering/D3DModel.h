@@ -13,7 +13,7 @@
 #include "D3DShaderobject.h"
 #include "..\External\WICTextureLoader.h"
 
-#pragma comment(lib, "..\\External\\DirectXTK.lib")
+//#pragma comment(lib, "..\\External\\DirectXTK.lib")
 
 namespace MocapGE
 {
