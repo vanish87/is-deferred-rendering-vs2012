@@ -397,15 +397,13 @@ namespace MocapGE
 					linearize_shadow_map_pp_->Apply();
 					shadow_map_xblur_pp_->Apply();
 					shadow_map_yblur_pp_->Apply();
-				}
+				}							
 
-				
-				
 
 				ssdo_pp_->SetCamera(back_frame_camera_);
-				//ssdo_pp_->Apply();
-				//occlusion_xblur_pp_->Apply();
- 				//occlusion_yblur_pp_->Apply();
+// 				ssdo_pp_->Apply();
+// 				occlusion_xblur_pp_->Apply();
+// 				occlusion_yblur_pp_->Apply();
 
 
 				//set gbuffer as input textures		

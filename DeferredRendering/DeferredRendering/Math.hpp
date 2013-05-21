@@ -83,9 +83,9 @@ namespace MocapGE
 		Vec3<T> TransformNormal(const Vec3<T> & lhs, const Matrix<T> & rhs)
 		{
 			Vec3<T> ret;
-			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] + 1 * rhs[3][0];
-			ret.y() = lhs.x() * rhs[0][1] + lhs.y() * rhs[1][1] + lhs.z() * rhs[2][1] + 1 * rhs[3][1];
-			ret.z() = lhs.x() * rhs[0][2] + lhs.y() * rhs[1][2] + lhs.z() * rhs[2][2] + 1 * rhs[3][2];
+			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] ;
+			ret.y() = lhs.x() * rhs[0][1] + lhs.y() * rhs[1][1] + lhs.z() * rhs[2][1] ;
+			ret.z() = lhs.x() * rhs[0][2] + lhs.y() * rhs[1][2] + lhs.z() * rhs[2][2] ;
 			return ret;
 		}
 
