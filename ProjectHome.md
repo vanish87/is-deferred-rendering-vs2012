@@ -1,0 +1,1 @@
+is-deferred-rendering-vs2012
